@@ -8,7 +8,8 @@
 #include <TGraph.h>
 #include <TGraph2D.h>
 
-void Analisi(){
+void Analisi()
+{
 int n=230;
 int Time[n]; 
 int Pmt1[n]; 
@@ -43,7 +44,8 @@ TCanvas* c2= new TCanvas("c2", "PMT2", 2000,500);
 
 
 
- for(int ieve=0; ieve<n; ieve++){
+ for(int ieve=0; ieve<n; ieve++)
+   {
   h1->Fill(Time[ieve]);
   h2->Fill(Pmt1[ieve]);
   h3->Fill(Pmt2[ieve]);
