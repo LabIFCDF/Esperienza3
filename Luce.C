@@ -7,13 +7,21 @@
 #include <TCanvas.h>
 #include <TGraph.h>
 #include <TGraph2D.h>
+#include "TGraphErrors.h"
+#include "TF1.h"
 
 void Luce()
 {
 	//INSERIRE n=MINIMO NUMERO RIGHE DEI 3 FILE
 	int n=403;
-	double l=250;//cm
-	
+	//cm
+	double l_0=0;
+	double l_1=50;
+	double l_2=100;
+	double l_3=150;
+	double l_4=200;
+	double l_5=250;
+	//creo degli array di supporto per poterli riordinare visto che i vector non si possono riordinare con la Step
 	double Pmt1_0[n];
 	double Pmt2_0[n];
 	double Pmt1_1[n];
@@ -53,7 +61,15 @@ void Luce()
 	double m_4s;
 	double m_5s;
 	//array della velocità della luce nella sbarra
-	double v[n];
+	double v_10[n];
+	double v_20[n];
+	double v_30[n];
+	double v_40[n];
+	double v_50[n];
+	//array dei valori medi delle velocità con relativo errore
+	double xcoord[5]={l_1, l_2, l_3, l_4, l_5};
+	double tl[5]={3.384, 7.154, 11.18, 15.15, 19.4};
+	double dxcoord[5]={0.2, 0.5, 0.7, 1, 1.25};
 	//istogrammi dei tempi nelle configurazioni paletta
 	TH1D* h0_s =  new TH1D("h0_s", "Pmt 1_0",200 ,0,0);
 	TH1D* h0_d =  new TH1D("h0_d", "Pmt 2_0",200 ,0,0);
@@ -77,8 +93,14 @@ void Luce()
 	TH1D* ht_50 =  new TH1D("ht_50", "dt_50",200 ,0,0);		
 	TCanvas* c3= new TCanvas("c3", "Differenze temporali", 2000,500);
 	//istogramma per la velocita' della luce
-	TH1D* hv =  new TH1D("hv", "Velocita' luce nella sbarra",200 ,0,0);
+	TH1D* hv_10 =  new TH1D("hv_10", "Velocita' luce nella sbarra, 50cm",2000 ,0,0);
+	TH1D* hv_20 =  new TH1D("hv_20", "Velocita' luce nella sbarra, 100cm",2000 ,0,0);
+	TH1D* hv_30 =  new TH1D("hv_30", "Velocita' luce nella sbarra, 150cm",2000 ,0,0);
+	TH1D* hv_40 =  new TH1D("hv_40", "Velocita' luce nella sbarra, 200cm",2000 ,0,0);
+	TH1D* hv_50 =  new TH1D("hv_50", "Velocita' luce nella sbarra, 250cm",2000 ,0,0);
 	TCanvas* c4= new TCanvas("c4", "Velocità luce nella sbarra", 2000,500);
+	
+	
 
 	//Legge il file e crea 9 vector n dimensionali    	
 	std::vector<double> Time_0(n), vPmt1_0(n), vPmt2_0(n);
@@ -128,8 +150,8 @@ void Luce()
     	TMath::Sort(n,Pmt1_4,ind_4s,0);
     	TMath::Sort(n,Pmt1_5,ind_5s,0);
     	//calcolo le mediane
-    	m_0s=Pmt1_0[ind_0s[200]];
-    	m_1s=Pmt1_1[ind_1s[200]];
+    	m_0s=Pmt1_0[ind_0s[550]];
+    	m_1s=Pmt1_1[ind_1s[550]];
     	m_2s=Pmt1_2[ind_2s[200]];
     	m_3s=Pmt1_3[ind_3s[200]];
     	m_4s=Pmt1_4[ind_4s[200]];
@@ -151,12 +173,20 @@ void Luce()
     	//calcolo la velocità della luce nella sbarra ATTENZIONE ALLE CONDIZIONI DI ESISTENZA
     	for(int i = 0; i < n; i++)
     	{
-    		v[i]=l/dt_50[i];
+    		 v_10[i]=l_1/dt_10[i];
+    		 v_20[i]=l_2/dt_20[i];
+    		 v_30[i]=l_3/dt_30[i];
+    		 v_40[i]=l_4/dt_40[i];
+    		 v_50[i]=l_5/dt_50[i];
     	}
     	
     	for(int i = 0; i < n; i++)
     	{
-    		hv->Fill(v[i]);
+    		hv_10->Fill(v_10[i]);
+    		hv_20->Fill(v_20[i]);
+    		hv_30->Fill(v_30[i]);
+    		hv_40->Fill(v_40[i]);
+    		hv_50->Fill(v_50[i]);
     	}
     	
 	//riempio istogrammi per le differenze temporali 
@@ -184,6 +214,35 @@ void Luce()
 	  	h5_s->Fill(Pmt1_5[i]);
 	  	h5_d->Fill(Pmt2_5[i]);
 	}
+	
+	//TGraph per il fit
+	TGraphErrors *grafico= new TGraphErrors(5,tl,xcoord,nullptr,dxcoord);
+	grafico->SetTitle("Velocità della luce in funzione della posizione; t[ns];lunghezza [cm]");
+	TCanvas* c5= new TCanvas("c5", "Velocità luce nella sbarra", 2000,500);
+	//Disegno il grafico
+	grafico->DrawClone("APE");
+	
+	//Funzione lineare
+	double chi;
+	TF1 *f= new TF1("Legge lineare","[0]+[1]*x",0,300);
+	f->SetParameter(0,0);
+	f->SetParameter(1,20);
+	//Linea carina
+	f->SetLineColor(kRed); f->SetLineStyle(2);
+	//Fit
+	grafico->Fit(f);
+	f->DrawClone("Same");
+	chi=f->GetChisquare();
+	c5->cd();
+	grafico->Draw();
+	cout << chi << endl;
+	
+	
+	
+	
+	
+	
+	
 	
 	c1->Divide(2,3);
 	c1->cd(1);
@@ -222,8 +281,17 @@ void Luce()
   	ht_40->Draw();
   	c3->cd(5);
   	ht_50->Draw();
-	c4->cd();
-	hv->Draw();  	
+  	c4->Divide(2,3);
+	c4->cd(1);
+	hv_10->Draw();
+	c4->cd(2);
+	hv_20->Draw();
+	c4->cd(3);
+	hv_30->Draw();
+	c4->cd(4);
+	hv_40->Draw();
+	c4->cd(5);
+	hv_50->Draw(); 	
 	
 	
 	
