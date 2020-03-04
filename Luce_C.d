@@ -76,5 +76,24 @@
 ./Luce_C.so: /home/giovanni/root/include/TGraph.h
 ./Luce_C.so: /home/giovanni/root/include/TGraph2D.h
 ./Luce_C.so: /home/giovanni/root/include/TVirtualHistPainter.h
+./Luce_C.so: /home/giovanni/root/include/TGraphErrors.h
+./Luce_C.so: /home/giovanni/root/include/TF1.h
+./Luce_C.so: /home/giovanni/root/include/TFormula.h
+./Luce_C.so: /home/giovanni/root/include/TObjArray.h
+./Luce_C.so: /home/giovanni/root/include/TMethodCall.h
+./Luce_C.so: /home/giovanni/root/include/Math/Types.h
+./Luce_C.so: /home/giovanni/root/include/TROOT.h
+./Luce_C.so: /home/giovanni/root/include/TDirectory.h
+./Luce_C.so: /home/giovanni/root/include/TBuffer.h
+./Luce_C.so: /home/giovanni/root/include/TClass.h
+./Luce_C.so: /home/giovanni/root/include/TObjString.h
+./Luce_C.so: /home/giovanni/root/include/ThreadLocalStorage.h
+./Luce_C.so: /home/giovanni/root/include/Bytes.h
+./Luce_C.so: /home/giovanni/root/include/TDatime.h
+./Luce_C.so: /home/giovanni/root/include/TUUID.h
+./Luce_C.so: /home/giovanni/root/include/TF1AbsComposition.h
+./Luce_C.so: /home/giovanni/root/include/TMath.h
+./Luce_C.so: /home/giovanni/root/include/TError.h
+./Luce_C.so: /home/giovanni/root/include/Math/ParamFunctor.h
 ./Luce_C.so: /home/giovanni/root/include/RVersion.h /home/giovanni/root/include/RConfig.h /home/giovanni/root/include/TClass.h /home/giovanni/root/include/TDictAttributeMap.h /home/giovanni/root/include/TInterpreter.h /home/giovanni/root/include/TROOT.h /home/giovanni/root/include/TBuffer.h /home/giovanni/root/include/TMemberInspector.h /home/giovanni/root/include/TError.h /home/giovanni/root/include/RtypesImp.h /home/giovanni/root/include/TIsAProxy.h /home/giovanni/root/include/TFileMergeInfo.h /home/giovanni/root/include/TCollectionProxyInfo.h /usr/local/bin/rootcling
 Luce_C__ROOTBUILDVERSION= 6.18/04

@@ -45,11 +45,11 @@ void Analisi()
 
 	//Legge il file e crea 9 vector n dimensionali    	
 	std::vector<double> Time_s(n), Pmt1_s(n), Pmt2_s(n);
-	std::ifstream fs_read("luces2802.dat");
+	std::ifstream fs_read("2802s.dat");
 	std::vector<double> Time_c(n), Pmt1_c(n), Pmt2_c(n);
 	std::ifstream fc_read("2802c.dat");
 	std::vector<double> Time_d(n), Pmt1_d(n), Pmt2_d(n);
-	std::ifstream fd_read("luced0203.dat");
+	std::ifstream fd_read("2702d.dat");
 	//Riempio i vector
     	for(int i = 0; i < n; i++)
     	{
