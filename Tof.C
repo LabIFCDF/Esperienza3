@@ -22,7 +22,8 @@ void Tof()
 	TCanvas* c2= new TCanvas("c2", "Lunghezza percorsa e punti di impatto", 2000,500);
 	TH1D* hDl =  new TH1D("hDl", "errori su l",200 ,0,0);
 	TCanvas* c3= new TCanvas("c3", "Errore su Lunghezza percorsa", 2000,500);
-        TH1D* hv = new TH1D("hv", "distribuzione di velocità", 200,0,40);
+        TH1D* hv1 = new TH1D("hv1", "distribuzione di velocità", 200,0,40);
+	 TH1D* hv2 = new TH1D("hv2", "distribuzione di velocità", 200,0,40);
 	TCanvas* c4= new TCanvas("c4", "distribuzione di velocità", 2000,500);
 
 	//Legge il file e crea 9 vector n dimensionali    	
@@ -49,7 +50,9 @@ della barra e l'estremo trovo il punto di impatto */
 	double x10[n];
 	double x20[n];
 	double tRit1;
-	double v[n];
+	double tRit2;
+	double v1[n];
+	double v2[n];
 	for(int i = 0; i<n; i++)
 	  {
 	    Pmt1[i]=Pmt1[i]*40;
@@ -62,8 +65,8 @@ della barra e l'estremo trovo il punto di impatto */
 	    l20[i]=TMath::Sqrt(TMath::Power(x20[i],2) + TMath::Power(h,2));
 	    Dl[i]=(l20[i] - l0[i])/2;
 	    if(Dl[i]<0) {Dl[i]=-Dl[i];}
-	    Rit2[i]=Pmt2[i]-(l[i]/c)+((140 +  x[i])/csbarra);
-	    Rit1[i]=Pmt1[i]-(l[i]/c)+((140 - x[i])/csbarra);
+	    Rit2[i]=Pmt2[i]-(l[i]/c)+((140 -  x[i])/csbarra);
+	    Rit1[i]=Pmt1[i]-(l[i]/c)+((140 + x[i])/csbarra);
 	  }
 
 	for(int i=0; i<n; i++)
@@ -93,17 +96,24 @@ della barra e l'estremo trovo il punto di impatto */
         hDl->Draw();
 
 	tRit1=hRit1->GetMean();
+	tRit2=hRit2->GetMean();
 	cout<<tRit1<<endl;
+      	cout<<tRit2<<endl;
 	for(i=0; i<n; i++)
 	  {
-	    v[i]=l[i]/(Pmt1[i]- tRit1 + ((140-x[i])/csbarra));
-	    if(x[i]<-140 ||  x[i]>140 || v[i]<0 || v[i]>40) {}
+	    v1[i]=l[i]/(Pmt1[i]- tRit1 + ((140+x[i])/csbarra));
+	    v2[i]=l[i]/(Pmt2[i]- tRit2 + ((140 - x[i])/csbarra));
+	    if(x[i]<-140 ||  x[i]>140 /*|| v1[i]>40 || v2[i]>40*/) {}
 	     else{
-	    hv->Fill(v[i]);
+	    hv1->Fill(v1[i]);
+	    hv2->Fill(v2[i]);
 	     }
 	  }
-	c4->cd();
-	hv->Draw();
+	c4->Divide(1,2);
+	c4->cd(1);
+	hv1->Draw();
+	c4->cd(2);
+	hv2->Draw();
 	
 }	  
 	
