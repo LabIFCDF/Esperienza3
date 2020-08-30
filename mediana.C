@@ -10,23 +10,26 @@
 #include "TGraphErrors.h"
 #include "TF1.h"
 
-void Luce()
+void mediana()
 {
 	//INSERIRE n=MINIMO NUMERO RIGHE DEI 3 FILE
-	int n=14688;
+	int n=9070;
 	//creo degli array di supporto per poterli riordinare visto che i vector non si possono riordinare con la Step
 	double Pmt1_0[n];
+	double Pmt2_0[n];
 	
 	//array di riordinamento
-	int ind_0s[n];
+	int ind_01[n];
+	int ind_02[n];
 	//mediane
-	double m_0s=0;
+	double m_01=0;
+	double m_02=0;
 	
 	
 
 	//Legge il file e crea 9 vector n dimensionali    	
 	std::vector<double> Time_0(n), vPmt1_0(n), vPmt2_0(n);
-	std::ifstream f0_read("dati10.dat");
+	std::ifstream f0_read("15LugDown3.dat");
 	//Riempio i vector
     	for(int i = 0; i < n; i++)
     	{
@@ -37,13 +40,17 @@ void Luce()
     	for(int i = 0; i < n; i++)
     	{
     		Pmt1_0[i]=vPmt1_0[i]*40;
-    	}
+		Pmt2_0[i]=vPmt2_0[i]*40;
+	 }
     	
     	//riordino gli array per conoscere le mediane
-    	TMath::Sort(n,Pmt1_0,ind_0s,0);
+    	TMath::Sort(n,Pmt1_0,ind_01,0);
+	TMath::Sort(n,Pmt2_0,ind_02,0);
     	//calcolo le mediane
-    	m_0s=Pmt1_0[ind_0s[7344]];
-    	cout <<"Pmt1_0=" << m_0s << endl;
+    	m_01=Pmt1_0[ind_01[4535]];
+	m_02=Pmt2_0[ind_02[4535]];
+    	cout <<"Pmt1_0=" << m_01 << endl;
+	cout <<"Pmt2_0=" << m_02 << endl;
 	
 	
 }

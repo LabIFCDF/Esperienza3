@@ -1,0 +1,24 @@
+#include <iostream>
+#include <fstream>
+#include <math.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
+#include <TCanvas.h>
+#include <TMath.h>
+#include <TGraph.h>
+#include <TGraph2D.h>
+#include <TF1.h>
+#include <TGraphErrors.h>
+
+void Beta()
+{
+  int n;
+//Legge il file e crea 3 vector n dimensionali    	
+  std::vector<double> Time(n), Pmt1(n), Pmt2(n);
+	std::ifstream f_read("15LugDown3.dat");
+	//Riempio i vector
+    	for(int i = 0; i < n; i++)
+    	{
+		f_read >> Time[i] >> Pmt1[i] >> Pmt2[i];
+	}
