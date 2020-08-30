@@ -204,8 +204,8 @@ della barra e l'estremo trovo il punto di impatto */
 	for(i=0; i<n; i++)
 	  {
 	    Theta[i]= TMath::ATan(x[i]/h);
-	    v1[i]=l[i]/(+Pmt1[i]- tRit1  + ((140+x[i])/csbarra));
-	    v2[i]=l[i]/(+Pmt2[i]- tRit2 + ((140 - x[i])/csbarra));
+	    v1[i]=l[i]/(+Pmt1[i]- 108.5  + ((140+x[i])/csbarra));
+	    v2[i]=l[i]/(+Pmt2[i]- 104.8 + ((140 - x[i])/csbarra));
 	    if(x[i]<-140 ||  x[i]>140/* || v1[i]>30 || v2[i]>30*/) {}
 	     else{
 	    hv1->Fill(v1[i]);
