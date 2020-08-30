@@ -1,0 +1,51 @@
+#include <iostream>
+#include <fstream>
+#include <math.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
+#include <TCanvas.h>
+#include <TMath.h>
+#include <TGraph.h>
+#include <TGraph2D.h>
+#include <TF1.h>
+#include <TGraphErrors.h>
+
+void Efficienza()
+{
+ int n = 14688 ; //Numero di dati nel file
+ int i;
+ int j;
+ TCanvas* c1= new TCanvas("c1", "Distribuzione dei punti di impatto", 2000,500);
+ TH1D* hx = new TH1D("hx", "Punto di impatto",200,0,0);
+ //Legge il file e crea 3 vector n dimensionali    	
+    std::vector<double> Time(n), Pmt1(n), Pmt2(n);
+	std::ifstream f_read("15LugT1T2.dat");
+	//Riempio i vector
+    	for(int i = 0; i < n; i++)
+    	{
+		f_read >> Time[i] >> Pmt1[i] >> Pmt2[i];
+	}
+	int csbarra=14;
+	double T12[n];
+	double TRit[n];
+	double x[n];
+	double Rit;
+	for(int i=0; i<n; i++){
+	  T12[i]=Pmt1[i];
+	  T12[i]=T12[i]*40;
+	  for(int j=0; j<n; j++){if (T12[j]==T12[i])
+	      { Rit = T12[i]; j=n-1;}
+	  }
+	}
+	cout << Rit << endl;
+	for(int i=0; i<n; i++) {
+	  x[i]=2*(Rit-T12[i])*csbarra;
+	   hx->Fill(x[i]);
+	}
+	c1->cd();
+	hx->Draw();
+	  
+	
+	
+}

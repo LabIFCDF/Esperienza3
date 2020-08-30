@@ -1,0 +1,53 @@
+#include <iostream>
+#include <fstream>
+#include <math.h>
+#include <TH1.h>
+#include <TH2.h>
+#include <TH3.h>
+#include <TCanvas.h>
+#include <TMath.h>
+#include <TGraph.h>
+#include <TGraph2D.h>
+#include <TF1.h>
+#include <TGraphErrors.h>
+
+void TRit()
+{
+  int n = 787 ; //Numero di dati nel file
+  int i;
+  TH1D* hRit1 =  new TH1D("hRit1", "Costante di ritardo 1",200 ,0,0);	
+  TH1D* hRit2 =  new TH1D("hRit2", "Costante di ritardo 2",200 ,0,0);	
+  TCanvas* c1= new TCanvas("c1", "Costanti di ritardo", 2000,500);
+ //Legge il file e crea 3 vector n dimensionali    	
+    std::vector<double> Time(n), Pmt1(n), Pmt2(n);
+	std::ifstream f_read("15LUG_UP150cm.dat");
+	//Riempio i vector
+    	for(int i = 0; i < n; i++)
+    	{
+		f_read >> Time[i] >> Pmt1[i] >> Pmt2[i];
+	}
+ //Parte relativa al calcolo
+	int c=30; //velucità della luce nel vuoto in cm/ns
+	int csbarra=14; //velocità della luce nella sbarra di scintillatore
+	int h=0; //distanza tra il PMT3 e la barra di scintillatore
+	double x[n]; //array dei punti di impatto
+	double l[n]; //lunghezza percorsa in volo
+	double TRit1[n]; //array per il tempo di ritardo tra 1 e 3
+	double TRit2[n]; //array per il tempo di ritardo tra 2 e 3
+
+	for(int i = 0; i<n; i++)
+      {
+	  Pmt1[i]=Pmt1[i]*40;
+	  Pmt2[i]=Pmt2[i]*40; //conversione in ns da volt
+	  x[i]= (Pmt2[i] - Pmt[1])/2; //determinazione punto di impatto
+	  TRit1[i]= Pmt1+((140+x[i])/2);
+	  TRit2[i]= Pmt2 + ((140-x[i])/2);
+	  hRit1->Fill(TRit1[i]); //riempo gli istogrammi
+	  hRit2->Fill(TRit2[i]);
+      }
+    	c1->Divide(1,2);
+	c1->cd(1);
+	hRit1->Draw();
+	c1->cd(2);
+	hRit2->Draw();
+}

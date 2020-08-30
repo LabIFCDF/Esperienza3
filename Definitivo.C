@@ -14,7 +14,7 @@
 void Definitivo()
 {
 	//INSERIRE n=MINIMO NUMERO RIGHE DEI 3 FILE
-	int n=580;
+	int n=9070;
 	int i;
 	TH1D* hRit1 =  new TH1D("hRit1", "Costante di ritardo 1",200 ,0,0);	
 	TH1D* hRit2 =  new TH1D("hRit2", "Costante di ritardo 2",200 ,0,0);	
@@ -39,7 +39,7 @@ void Definitivo()
 
 	//Legge il file e crea 9 vector n dimensionali    	
     std::vector<double> Time(n), Pmt1(n), Pmt2(n);
-	std::ifstream f_read("tofc0403.dat");
+	std::ifstream f_read("15LugDown3.dat");
 	//Riempio i vector
     	for(int i = 0; i < n; i++)
     	{
@@ -50,7 +50,7 @@ due per avere il tempo che ci ha messo la luce a fare una distanza pari a due vo
 della barra e l'estremo trovo il punto di impatto */
 	double csbarra=14 ; //velocità luce nella barra
 	double x[n]; // distanza dei punti di impatto sulla barra rispetto al centro
-	double h=110 ; //distanza verticale tra Pmt3 e barra di scintillatore
+	double h=180 ; //distanza verticale tra Pmt3 e barra di scintillatore
 	double l[n]; //distanza obliqua percorsa dalla particella
 	double lmax[n]; // l calcolato al massimo
 	double lmin[n]; // l calcolato al minimo
@@ -80,6 +80,7 @@ della barra e l'estremo trovo il punto di impatto */
 	    Pmt1[i]=Pmt1[i]*40;
 	    Pmt2[i]=Pmt2[i]*40;
 	    x[i]=csbarra*(Pmt1[i] - Pmt2[i])/2;
+	    if(x[i]>=0){
 	    xmax[i]= (x[i]+10);
 	    lmax[i]=TMath::Sqrt(TMath::Power(xmax[i],2) + TMath::Power(h,2));
 	    l[i]=TMath::Sqrt(TMath::Power(x[i],2) + TMath::Power(h,2));
@@ -87,11 +88,21 @@ della barra e l'estremo trovo il punto di impatto */
 	    lmin[i]=TMath::Sqrt(TMath::Power(xmin[i],2) + TMath::Power(h,2));
 	    Dl[i]=(lmax[i] - lmin[i])/2;
 	    if(Dl[i]<0) {Dl[i]=-Dl[i];}
-	    Rit2[i]=Pmt2[i]+(l[i]/c)-((140 -  x[i])/csbarra);
-	    Rit1[i]=Pmt1[i]+(l[i]/c)-((140 + x[i])/csbarra);
-	    g[i]= -(l[i]/c) + ((140 -  x[i])/csbarra);
+	    }
+	    else {
+	    xmax[i]= (x[i]-10);
+	    lmax[i]=TMath::Sqrt(TMath::Power(xmax[i],2) + TMath::Power(h,2));
+	    l[i]=TMath::Sqrt(TMath::Power(x[i],2) + TMath::Power(h,2));
+	    xmin[i]=x[i]+10;
+	    lmin[i]=TMath::Sqrt(TMath::Power(xmin[i],2) + TMath::Power(h,2));
+	    Dl[i]=(lmax[i] - lmin[i])/2;
+	    if(Dl[i]<0) {Dl[i]=-Dl[i];}
+	    }
+	    Rit2[i]=Pmt2[i]-(l[i]/c)+((140 -  x[i])/csbarra);
+	    Rit1[i]=Pmt1[i]-(l[i]/c)+((140 + x[i])/csbarra);
+	    g[i]= (l[i]/c) - ((140 -  x[i])/csbarra);
 	    T23[i]=Pmt2[i];
-	    g2[i]= -(l[i]/c) + ((140 +  x[i])/csbarra);
+	    g2[i]= +(l[i]/c) - ((140 +  x[i])/csbarra);
 	    T13[i]=Pmt1[i];
 	  }
 	/*	TMath::Sort(n,g,gord,0);
@@ -116,9 +127,6 @@ della barra e l'estremo trovo il punto di impatto */
 	    g[j+1]=gord;
 	    
 	  }
-	g[0]=-8;
-	g[n-2]=15;
-	g[n-1]=15;
 	    
 	/*for(int i=0; i<n; i++){
 	  cout << g[i] << endl;}
@@ -162,7 +170,6 @@ della barra e l'estremo trovo il punto di impatto */
 	    hDTRit1->Fill(DTRit1[i]);
 	    hDTRit2->Fill(DTRit2[i]);
 	    hx->Fill(x[i]);
-	    if(l[i]<100) {cout<<i<<endl;}
 	    hl->Fill(l[i]);
 	    hDl->Fill(Dl[i]);
 	    }
@@ -197,8 +204,8 @@ della barra e l'estremo trovo il punto di impatto */
 	for(i=0; i<n; i++)
 	  {
 	    Theta[i]= TMath::ATan(x[i]/h);
-	    v1[i]=l[i]/(-Pmt1[i]+ 98  + ((140+x[i])/csbarra));
-	    v2[i]=l[i]/(-Pmt2[i]+ 100 + ((140 - x[i])/csbarra));
+	    v1[i]=l[i]/(+Pmt1[i]- tRit1  + ((140+x[i])/csbarra));
+	    v2[i]=l[i]/(+Pmt2[i]- tRit2 + ((140 - x[i])/csbarra));
 	    if(x[i]<-140 ||  x[i]>140/* || v1[i]>30 || v2[i]>30*/) {}
 	     else{
 	    hv1->Fill(v1[i]);
@@ -227,7 +234,7 @@ della barra e l'estremo trovo il punto di impatto */
 	    dt[i]=0.1;
 	    dg[i]=2*(g[i]/100);
 	    dg2[i]=2*(g2[i]/100);
-	    if (T23[i]<90) T23[i]=90;}
+	   }
  	//TGraph per il fit
 	  TGraphErrors *grafico= new TGraphErrors(n,g,T23,dg,dt);
 	grafico->SetTitle("Tempi di ritardo2; t[ns];lunghezza [cm]");
