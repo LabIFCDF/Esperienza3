@@ -39,11 +39,16 @@ void Luce()
 	
 	
 	//array per determinare le differenze temporali al variare della posizione della paletta nelle configurazioni 0-1-2-3-4-5 distanziate di 50 cm
-	double dt_10[n];
-	double dt_20[n];
-	double dt_30[n];
-	double dt_40[n];
-	double dt_50[n];
+	double dt_s10[n];
+	double dt_s20[n];
+	double dt_s30[n];
+	double dt_s40[n];
+	double dt_s50[n];
+	double dt_d10[n];
+	double dt_d20[n];
+	double dt_d30[n];
+	double dt_d40[n];
+	double dt_d50[n];
 	double ttot[n];
 	//array di riordinamento
 	int ind_0s[n];
@@ -52,24 +57,42 @@ void Luce()
 	int ind_3s[n];
 	int ind_4s[n];
 	int ind_5s[n];
+	int ind_0d[n];
+	int ind_1d[n];
+	int ind_2d[n];
+	int ind_3d[n];
+	int ind_4d[n];
+	int ind_5d[n];
 	//mediane
 	//array di riordinamento
-	double m_0s;
-	double m_1s;
-	double m_2s;
-	double m_3s;
-	double m_4s;
-	double m_5s;
+	double m_0s=0;
+	double m_1s=0;
+	double m_2s=0;
+	double m_3s=0;
+	double m_4s=0;
+	double m_5s=0;
+	double m_0d=0;
+	double m_1d=0;
+	double m_2d=0;
+	double m_3d=0;
+	double m_4d=0;
+	double m_5d=0;
 	//array della velocità della luce nella sbarra
-	double v_10[n];
-	double v_20[n];
-	double v_30[n];
-	double v_40[n];
-	double v_50[n];
+	double v_s10[n];
+	double v_s20[n];
+	double v_s30[n];
+	double v_s40[n];
+	double v_s50[n];
+	double v_d10[n];
+	double v_d20[n];
+	double v_d30[n];
+	double v_d40[n];
+	double v_d50[n];
 	//array dei valori medi delle velocità con relativo errore
-	double xcoord[5]={l_1, l_2, l_3, l_4, l_5};
-	double tl[5]={3.384, 7.154, 11.18, 15.15, 19.4};
-	double dxcoord[5]={0.2, 0.5, 0.7, 1, 1.25};
+	double xcoord[5]={l_1, l_2, l_3, l_4};
+	//double tl[5]={3.384, 7.154, 11.18, 15.15, 19.4};
+	double tl[5]={2.997, 7.38, 11.54, 15.4};
+	double dxcoord[5]={1, 1, 1, 2};
 	//istogrammi dei tempi nelle configurazioni paletta
 	TH1D* h0_s =  new TH1D("h0_s", "Pmt 1_0",200 ,0,0);
 	TH1D* h0_d =  new TH1D("h0_d", "Pmt 2_0",200 ,0,0);
@@ -149,54 +172,88 @@ void Luce()
     	TMath::Sort(n,Pmt1_3,ind_3s,0);
     	TMath::Sort(n,Pmt1_4,ind_4s,0);
     	TMath::Sort(n,Pmt1_5,ind_5s,0);
+    	TMath::Sort(n,Pmt2_0,ind_0d,0);
+    	TMath::Sort(n,Pmt2_1,ind_1d,0);
+    	TMath::Sort(n,Pmt2_2,ind_2d,0);
+    	TMath::Sort(n,Pmt2_3,ind_3d,0);
+    	TMath::Sort(n,Pmt2_4,ind_4d,0);
+    	TMath::Sort(n,Pmt2_5,ind_5d,0);
     	//calcolo le mediane
-    	m_0s=Pmt1_0[ind_0s[550]];
-    	m_1s=Pmt1_1[ind_1s[550]];
-    	m_2s=Pmt1_2[ind_2s[200]];
-    	m_3s=Pmt1_3[ind_3s[200]];
-    	m_4s=Pmt1_4[ind_4s[200]];
-    	m_5s=Pmt1_5[ind_5s[200]];
+    	m_0s=Pmt1_0[ind_0s[201]];
+    	cout <<"Pmt1_0=" << m_0s << endl;
+    	m_1s=Pmt1_1[ind_1s[201]];
+    	cout <<"Pmt1_1=" << m_1s << endl;
+    	m_2s=Pmt1_2[ind_2s[201]];
+    	cout <<"Pmt1_2=" << m_2s << endl;
+    	m_3s=Pmt1_3[ind_3s[201]];
+    	cout <<"Pmt1_3=" << m_3s << endl;
+    	m_4s=Pmt1_4[ind_4s[201]];
+    	cout <<"Pmt1_4=" << m_4s << endl;
+    	m_5s=Pmt1_5[ind_5s[201]];
+    	cout <<"Pmt1_5=" << m_5s << endl;
+    	m_0d=Pmt2_0[ind_0d[201]];
+    	cout <<"Pmt2_0=" << m_0d << endl;
+    	m_1d=Pmt2_1[ind_1d[201]];
+    	cout <<"Pmt2_1=" << m_1d << endl;
+    	m_2d=Pmt2_2[ind_2d[201]];
+    	cout <<"Pmt2_2=" << m_2d << endl;
+    	m_3d=Pmt2_3[ind_3d[201]];
+    	cout <<"Pmt2_2=" << m_3d << endl;
+    	m_4d=Pmt2_4[ind_4d[201]];
+    	cout <<"Pmt2_4=" << m_4s << endl;
+    	m_5d=Pmt2_5[ind_5d[201]];
+    	cout <<"Pmt2_5=" << m_5d << endl;
     	
     	
     	
     	//determino gli intervalli temporali 
 	for(int i = 0; i < n; i++)
     	{
-    		dt_10[i]=m_1s-m_0s;
-    		dt_20[i]=m_2s-m_0s;
-    		dt_30[i]=m_3s-m_0s;
-    		dt_40[i]=m_4s-m_0s;
-    		dt_50[i]=m_5s-m_0s;
+    		dt_s10[i]=m_1s-m_0s;
+    		dt_s20[i]=m_2s-m_0s;
+    		dt_s30[i]=m_3s-m_0s;
+    		dt_s40[i]=m_4s-m_0s;
+    		dt_s50[i]=m_5s-m_0s;
+    		dt_d10[i]=m_0d-m_1d;
+    		dt_d20[i]=m_0d-m_2d;
+    		dt_d30[i]=m_0d-m_3d;
+    		dt_d40[i]=m_0d-m_4d;
+    		dt_d50[i]=m_0d-m_5d;
     	}
     	
     	
     	//calcolo la velocità della luce nella sbarra ATTENZIONE ALLE CONDIZIONI DI ESISTENZA
     	for(int i = 0; i < n; i++)
     	{
-    		 v_10[i]=l_1/dt_10[i];
-    		 v_20[i]=l_2/dt_20[i];
-    		 v_30[i]=l_3/dt_30[i];
-    		 v_40[i]=l_4/dt_40[i];
-    		 v_50[i]=l_5/dt_50[i];
+    		 v_s10[i]=l_1/dt_s10[i];
+    		 v_s20[i]=l_2/dt_s20[i];
+    		 v_s30[i]=l_3/dt_s30[i];
+    		 v_s40[i]=l_4/dt_s40[i];
+    		 v_s50[i]=l_5/dt_s50[i];
+    		 v_d10[i]=l_1/dt_d10[i];
+    		 v_d20[i]=l_2/dt_d20[i];
+    		 v_d30[i]=l_3/dt_d30[i];
+    		 v_d40[i]=l_4/dt_d40[i];
+    		 v_d50[i]=l_5/dt_d50[i];
     	}
     	
     	for(int i = 0; i < n; i++)
     	{
-    		hv_10->Fill(v_10[i]);
-    		hv_20->Fill(v_20[i]);
-    		hv_30->Fill(v_30[i]);
-    		hv_40->Fill(v_40[i]);
-    		hv_50->Fill(v_50[i]);
+    		hv_10->Fill(v_d10[i]);
+    		hv_20->Fill(v_d20[i]);
+    		hv_30->Fill(v_d30[i]);
+    		hv_40->Fill(v_d40[i]);
+    		hv_50->Fill(v_d50[i]);
     	}
     	
 	//riempio istogrammi per le differenze temporali 
 	for(int i=0; i<n; i++)
 	{
-		ht_10->Fill(dt_10[i]);
-		ht_20->Fill(dt_20[i]);
-		ht_30->Fill(dt_30[i]);
-		ht_40->Fill(dt_40[i]);
-		ht_50->Fill(dt_50[i]);
+		ht_10->Fill(dt_d10[i]);
+		ht_20->Fill(dt_d20[i]);
+		ht_30->Fill(dt_d30[i]);
+		ht_40->Fill(dt_d40[i]);
+		ht_50->Fill(dt_d50[i]);
 	}
 	//riempio gli istogrammi con i singoli tempi dei file dat relativi alle posizioni sx,centro,dx della paletta
 	for(int i=0; i<n; i++)
@@ -216,7 +273,7 @@ void Luce()
 	}
 	
 	//TGraph per il fit
-	TGraphErrors *grafico= new TGraphErrors(5,tl,xcoord,nullptr,dxcoord);
+	TGraphErrors *grafico= new TGraphErrors(4,tl,xcoord,nullptr,dxcoord);
 	grafico->SetTitle("Velocità della luce in funzione della posizione; t[ns];lunghezza [cm]");
 	TCanvas* c5= new TCanvas("c5", "Velocità luce nella sbarra", 2000,500);
 	//Disegno il grafico
@@ -292,7 +349,6 @@ void Luce()
 	hv_40->Draw();
 	c4->cd(5);
 	hv_50->Draw(); 	
-	
 	
 	
 }
