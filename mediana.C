@@ -10,6 +10,9 @@
 #include "TGraphErrors.h"
 #include "TF1.h"
 
+
+//TEMPO RITARDO EFFICIENZA 31.839
+
 void Luce()
 {
 	//INSERIRE n=MINIMO NUMERO RIGHE DEI 3 FILE
