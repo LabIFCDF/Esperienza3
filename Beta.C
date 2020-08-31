@@ -17,13 +17,14 @@ void Beta()
 	int j1=0;
 	int j2=0;
 	//array di riordinamento
-	int ind_01[n];
-	int ind_02[n];
+	int ind_01[n1];
+	int ind_02[n1];
 	//mediane
 	double m_01=0;
 	double m_02=0;
 	//posizione sulla sbarra
 	double x[n1];
+	double gamma[n1];
 	double L[n1];
 	double b[n1];
 	double t_volo[n1];
@@ -31,13 +32,16 @@ void Beta()
 	double Pmt2_0[n];
 	double Pmt1_corretto[n1];
 	double Pmt2_corretto[n1];
+	double angolo[n1];
 	TH1D* h0_s =  new TH1D("h0_s", "Differenza temporale (T_pmt+T_rit)-T_pmt1",200 ,0,0);
 	TH1D* h0_d =  new TH1D("h0_d", "Differenza temporale (T_pmt+T_rit)-T_pmt2",200 ,0,0);
 	TH1D* xsbarra =  new TH1D("xsbarra", "Distribuzione punti di impatto",200 ,0,0);
-	TH1D* beta =  new TH1D("beta", "beta",200 ,0,0);
+	TH1D* beta =  new TH1D("beta", "beta",100 ,0,1);
+	TH1D* theta =  new TH1D("theta", "angolo",50 ,0,0);
 	TCanvas* c1= new TCanvas("c1", "Differenze temporali tra pmt inferiore ritardato e pmt1/2 ai lati", 2000,500);
 	TCanvas* c2= new TCanvas("c2", "Distribuzione punti di impatto", 2000,500);
 	TCanvas* c3= new TCanvas("c3", "Beta", 2000,500);
+	TCanvas* c4= new TCanvas("c4", "Angolo", 2000,500);
 	std::vector<double> Time_0(n), vPmt1_0(n), vPmt2_0(n);
 	std::ifstream f0_read("15LugDown3.dat");
 	for(int i = 0; i < n; i++)
@@ -92,13 +96,17 @@ void Beta()
 	for(int i=0; i<n1; i++)
 	{
 		t_volo[i]=(x[i]/12)+Pmt1_corretto[i]-111.665;
-		b[i]=(L[i]/t_volo[i])/30;
-		if(b[i]<=1&&b[i]>=0)
-		{
-			beta->Fill(b[i]);	
-		}	
+		b[i]=(L[i]/(30*t_volo[i]));
+		gamma[i]=1/TMath::Sqrt(1 - TMath::Power(b[i],2));
+		//2 A MANO WAT?
+		b[i]=2*b[i]/gamma[i];
+		beta->Fill(b[i]);	
 	}
-	
+	for(int i=0; i<n1; i++)
+	{
+		angolo[i]=TMath::ATan((x[i]-140)/180);
+		theta->Fill(angolo[i]);
+	}
 	c1->Divide(1,2);
 	c1->cd(1);
 	h0_s->Draw();
@@ -109,7 +117,10 @@ void Beta()
 	xsbarra->Draw();
 	c3->Divide(1,1);
 	c3->cd(1);
-	beta->Draw();
+	beta->Draw("HIST E");
+	c4->Divide(1,1);
+	c4->cd(1);
+	theta->Draw("HIST E");
 	
 	
 	
