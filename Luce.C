@@ -64,7 +64,6 @@ void Luce()
 	int ind_4d[n];
 	int ind_5d[n];
 	//mediane
-	//array di riordinamento
 	double m_0s=0;
 	double m_1s=0;
 	double m_2s=0;

@@ -16,10 +16,17 @@ void Efficienza()
  int n = 14688 ; //Numero di dati nel file
  int i;
  int j;
+ Double_t factor = 1.;
  TCanvas* c1= new TCanvas("c1", "Distribuzione dei punti di impatto", 2000,500);
- TH1D* hx = new TH1D("hx", "Punto di impatto",200,0,0);
+ TH1D* hx = new TH1D("hx", "Punto di impatto",60,0,0);
  TCanvas* c2= new TCanvas("c2", "Distribuzione dei tempi", 2000,500);
+<<<<<<< HEAD
  TH1D* ht = new TH1D("ht", "Tempo rilevato",200,0,0);
+=======
+ TH1D* ht = new TH1D("ht", "Tempi",200,0,0);
+
+ 
+>>>>>>> ff4d9f2416c75441edeeb579b52598190214c126
  /*Legge il file e crea 3 vector n dimensionali    	
     std::vector<double> Time(n), Pmt1(n), Pmt2(n);
 	std::ifstream f_read("15LugT1T2.dat");
@@ -75,7 +82,8 @@ void Efficienza()
 
 	}
 	c1->cd();
-	hx->Draw("HIST E");
+	//hx->Scale(factor/hx->Integral(), "width");
+	hx->Draw();
 	c2->cd();
 	ht->Draw("HIST E");
 	
