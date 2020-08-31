@@ -19,7 +19,7 @@ void Efficienza()
  TCanvas* c1= new TCanvas("c1", "Distribuzione dei punti di impatto", 2000,500);
  TH1D* hx = new TH1D("hx", "Punto di impatto",200,0,0);
  TCanvas* c2= new TCanvas("c2", "Distribuzione dei tempi", 2000,500);
- TH1D* ht = new TH1D("ht", "Punto di impatto",200,0,0);
+ TH1D* ht = new TH1D("ht", "Tempo rilevato",200,0,0);
  /*Legge il file e crea 3 vector n dimensionali    	
     std::vector<double> Time(n), Pmt1(n), Pmt2(n);
 	std::ifstream f_read("15LugT1T2.dat");
@@ -28,7 +28,7 @@ void Efficienza()
     	{
 		f_read >> Time[i] >> Pmt1[i] >> Pmt2[i];
 		}*/
-	int csbarra=14;
+	int csbarra=12;
 	double T12[n];
 	double x[n];
 	double t[n];
