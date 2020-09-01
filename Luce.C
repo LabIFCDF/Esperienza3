@@ -91,7 +91,7 @@ void Luce()
 	double xcoord[5]={l_1, l_2, l_3, l_4};
 	//double tl[5]={3.384, 7.154, 11.18, 15.15, 19.4};
 	double tl[5]={2.997, 7.38, 11.54, 15.4};
-	double dxcoord[5]={1, 1, 1, 2};
+	double dxcoord[5]={1.5, 1.5, 1.5, 1.5};
 	//istogrammi dei tempi nelle configurazioni paletta
 	TH1D* h0_s =  new TH1D("h0_s", "Pmt 1_0",200 ,0,0);
 	TH1D* h0_d =  new TH1D("h0_d", "Pmt 2_0",200 ,0,0);
@@ -105,22 +105,22 @@ void Luce()
 	TH1D* h4_d =  new TH1D("h4_d", "Pmt 2_4",200 ,0,0);
 	TH1D* h5_s =  new TH1D("h5_s", "Pmt 1_5",200 ,0,0);
 	TH1D* h5_d =  new TH1D("h5_d", "Pmt 2_5",200 ,0,0);
-	TCanvas* c1= new TCanvas("c1", "Singoli tempi nelle configurazioni della paletta 0-1-2", 2000,500);
-	TCanvas* c2= new TCanvas("c2", "Singoli tempi nelle configurazioni della paletta 1-2-3", 2000,500);
+	//TCanvas* c1= new TCanvas("c1", "Singoli tempi nelle configurazioni della paletta 0-1-2", 2000,500);
+	//TCanvas* c2= new TCanvas("c2", "Singoli tempi nelle configurazioni della paletta 1-2-3", 2000,500);
 	//istogrammi per determinare le differenze dei tempi dt1 e dt2, cioè PMT1-centro e PMT2-centro	
 	TH1D* ht_10 =  new TH1D("ht_10", "dt_10",200 ,0,0);	
 	TH1D* ht_20 =  new TH1D("ht_20", "dt_20",200 ,0,0);
 	TH1D* ht_30 =  new TH1D("ht_30", "dt_30",200 ,0,0);	
 	TH1D* ht_40 =  new TH1D("ht_40", "dt_40",200 ,0,0);	
 	TH1D* ht_50 =  new TH1D("ht_50", "dt_50",200 ,0,0);		
-	TCanvas* c3= new TCanvas("c3", "Differenze temporali", 2000,500);
+	//TCanvas* c3= new TCanvas("c3", "Differenze temporali", 2000,500);
 	//istogramma per la velocita' della luce
 	TH1D* hv_10 =  new TH1D("hv_10", "Velocita' luce nella sbarra, 50cm",2000 ,0,0);
 	TH1D* hv_20 =  new TH1D("hv_20", "Velocita' luce nella sbarra, 100cm",2000 ,0,0);
 	TH1D* hv_30 =  new TH1D("hv_30", "Velocita' luce nella sbarra, 150cm",2000 ,0,0);
 	TH1D* hv_40 =  new TH1D("hv_40", "Velocita' luce nella sbarra, 200cm",2000 ,0,0);
 	TH1D* hv_50 =  new TH1D("hv_50", "Velocita' luce nella sbarra, 250cm",2000 ,0,0);
-	TCanvas* c4= new TCanvas("c4", "Velocità luce nella sbarra", 2000,500);
+	//TCanvas* c4= new TCanvas("c4", "Velocità luce nella sbarra", 2000,500);
 	
 	
 
@@ -273,10 +273,9 @@ void Luce()
 	
 	//TGraph per il fit
 	TGraphErrors *grafico= new TGraphErrors(4,tl,xcoord,nullptr,dxcoord);
-	grafico->SetTitle("Velocità della luce in funzione della posizione; t[ns];lunghezza [cm]");
-	TCanvas* c5= new TCanvas("c5", "Velocità luce nella sbarra", 2000,500);
-	//Disegno il grafico
-	grafico->DrawClone("APE");
+	grafico->SetTitle("Velocita' della luce in funzione della posizione; t[ns];lunghezza [cm]");
+	TCanvas* c5= new TCanvas("c5", "Velocita' luce nella sbarra", 2000,500);
+
 	
 	//Funzione lineare
 	double chi;
@@ -284,13 +283,17 @@ void Luce()
 	f->SetParameter(0,0);
 	f->SetParameter(1,20);
 	//Linea carina
-	f->SetLineColor(kRed); f->SetLineStyle(2);
+	f->SetLineColor(kBlue);
+	f->SetLineWidth(1);
+	f->SetNpx(10000);
+	 //f->SetLineStyle();
 	//Fit
 	grafico->Fit(f);
-	f->DrawClone("Same");
+	f->Draw();
+		//Disegno il grafico
+	grafico->Draw("APE SAME");
 	chi=f->GetChisquare();
 	c5->cd();
-	grafico->Draw();
 	cout << chi << endl;
 	
 	
@@ -300,7 +303,7 @@ void Luce()
 	
 	
 	
-	c1->Divide(2,3);
+	/*c1->Divide(2,3);
 	c1->cd(1);
 	h0_s->Draw();
   	c1->cd(2);
@@ -347,7 +350,7 @@ void Luce()
 	c4->cd(4);
 	hv_40->Draw();
 	c4->cd(5);
-	hv_50->Draw(); 	
+	hv_50->Draw(); 	*/
 	
 	
 }

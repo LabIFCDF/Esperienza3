@@ -42,9 +42,11 @@ TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
 	double Pmt2_corretto[n1];
 	double angolo[n1];
         double max=-1;
-	TH1D* h0_s =  new TH1D("h0_s", "Differenza temporale (T_pmt+T_rit)-T_pmt1",200 ,0,0);
-	TH1D* h0_d =  new TH1D("h0_d", "Differenza temporale (T_pmt+T_rit)-T_pmt2",200 ,0,0);
+	TH1D* h0_s =  new TH1D("h0_s", "Differenza temporale (T_pmt+T_rit)-T_pmt1",70 ,0,0);
+	TH1D* h0_d =  new TH1D("h0_d", "Differenza temporale (T_pmt+T_rit)-T_pmt2",70 ,0,0);
 	TH1D* xsbarra =  new TH1D("xsbarra", "Distribuzione punti di impatto pesata con l'efficienza ",29 ,0, 282);
+	TH1D* lvolo =  new TH1D("lvolo", "Distribuzione altezza percorsa ",29 ,0, 0);
+	TH1D* htv =  new TH1D("htv", "Distribuzione tempi di volo ",29 ,0, 0);
 	xsbarra->Sumw2();
 	TH1D* beta =  new TH1D("beta", "Distribuzione dei beta dei muoni",100 ,0,1);
 	TH1D* theta =  new TH1D("theta", "Distribuzione angolare pesata con l'efficienza",27 ,0,0);
@@ -53,6 +55,8 @@ TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
 	TCanvas* c2= new TCanvas("c2", "Distribuzione punti di impatto pesata con l'efficienza", 2000,500);
 	TCanvas* c3= new TCanvas("c3", "Distribuzione dei beta dei muoni", 2000,500);
 	TCanvas* c4= new TCanvas("c4", "Distribuzione angolare pesata con l'efficienza", 2000,500);
+	TCanvas* c5= new TCanvas("c5", "Distribuzione altezza percorsa", 2000,500);
+	TCanvas* c6= new TCanvas("c6", "Distribuzione tempo di volo", 2000,500);
 	std::vector<double> Time_0(n), vPmt1_0(n), vPmt2_0(n);
 	std::ifstream f0_read("15LugDown3.dat");
 	for(int i = 0; i < n; i++)
@@ -108,7 +112,8 @@ TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
 		weight = h_eff->GetBinContent(ibin);
 		if(weight > 0.) //cout << "position = " << x[i] << " || weight = " << weight << endl;
 		{
-			xsbarra->Fill(x[i], 1./weight);
+			xsbarra->Fill(x[i],(TMath::ATan((x[i]-130)/180)+TMath::Sin(TMath::ATan((x[i]-130)/180))*TMath::Cos(TMath::ATan((x[i]-130)/180))-TMath::ATan((x[i]-140)/180)-TMath::Sin(TMath::ATan((x[i]-140)/180))*TMath::Cos(TMath::ATan((x[i]-140)/180)))/(2*weight));
+			//
 		}
 			
 			
@@ -121,10 +126,13 @@ TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
 	{
 		//L[i]=sqrt(pow((x[i]-140),2)+pow(180,2));
 		L[i]=TMath::Sqrt(TMath::Power((x[i]-140),2) + TMath::Power(180,2));
+		lvolo->Fill(L[i]);
 	}
 	for(int i=0; i<n1; i++)
 	{
-		t_volo[i]=(x[i]/12)+Pmt1_corretto[i]-111.665;
+		//t_volo[i]=(x[i]/12)+Pmt1_corretto[i]-105;
+		t_volo[i]=L[i]/30;
+		htv->Fill(t_volo[i]);
 		b[i]=(L[i]/(30*t_volo[i]));
 		gamma[i]=1/TMath::Sqrt(1 - TMath::Power(b[i],2));
 		//2 A MANO WAT?
@@ -143,9 +151,9 @@ TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
 	}
 	c1->Divide(1,2);
 	c1->cd(1);
-	h0_s->Draw();
+	h0_s->Draw("HIST E");
   	c1->cd(2);
-  	h0_d->Draw();
+  	h0_d->Draw("HIST E");
   	c2->Divide(1,1);
 	c2->cd(1);
 	xsbarra->Draw("HIST E");
@@ -155,6 +163,12 @@ TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
 	c4->Divide(1,1);
 	c4->cd(1);
 	theta->Draw("HIST E");
+	c5->Divide(1,1);
+	c5->cd(1);
+	lvolo->Draw("HIST E");
+	c6->Divide(1,1);
+	c6->cd(1);
+	htv->Draw("HIST E");
 	
 	
 	
