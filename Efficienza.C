@@ -18,15 +18,13 @@ void Efficienza()
  int j;
  Double_t factor = 1.;
  TCanvas* c1= new TCanvas("c1", "Distribuzione dei punti di impatto", 2000,500);
- TH1D* hx = new TH1D("hx", "Punto di impatto",60,0,0);
+ TH1D* hx = new TH1D("hx", "Distribuzione dei punti di impatto con la sola sbarra di scintillatore, normalizzata con il numero atteso di muoni per bin",29,0,282);
  TCanvas* c2= new TCanvas("c2", "Distribuzione dei tempi", 2000,500);
-<<<<<<< HEAD
- TH1D* ht = new TH1D("ht", "Tempo rilevato",200,0,0);
-=======
- TH1D* ht = new TH1D("ht", "Tempi",200,0,0);
-
+ TH1D* ht = new TH1D("ht", "Tempo rilevato",100,0,0);
+ TCanvas* c3= new TCanvas("c3", "Distribuzione dei punti di impatto in angolo", 2000,500);
+ TH1D* htheta = new TH1D("htheta", "Distribuzione angolare con la sola sbarra di scintillatore, normalizzata al bin piu' popolato",27,0,0);
  
->>>>>>> ff4d9f2416c75441edeeb579b52598190214c126
+
  /*Legge il file e crea 3 vector n dimensionali    	
     std::vector<double> Time(n), Pmt1(n), Pmt2(n);
 	std::ifstream f_read("15LugT1T2.dat");
@@ -48,8 +46,8 @@ void Efficienza()
 	//mediane
 	double m_0s=0;
 	
-	
-
+	double max=-1;
+	double theta[n];
 	//Legge il file e crea 9 vector n dimensionali    	
 	std::vector<double> Time_0(n), vPmt1_0(n), vPmt2_0(n);
 	std::ifstream f0_read("15LugT1T2.dat");
@@ -78,14 +76,47 @@ void Efficienza()
 	for(int i=0; i<n; i++) {
 	  ht->Fill(T12[i]);
 	  x[i]=((T12[i]-Rit)*csbarra)/2;
-	  if (x[i]>-150 && x[i]<150){ hx->Fill(x[i]);}
+	  if (x[i]>-150 && x[i]<150)
+	  { hx->Fill(x[i]+140);
+	    theta[i]=TMath::ATan((x[i])/180);
+	    htheta->Fill(theta[i]);
+	  
+	  }
 
 	}
+	Float_t *bins = new Float_t[hx->GetSize()];
+	
+        for (Int_t i=0;i<hx->GetSize();i++)
+        {
+       		bins[i] = hx->GetBinContent(i);
+       		cout<< bins[i] << endl;
+       	}
+       	for (Int_t i=0;i<hx->GetSize();i++)
+        {
+       		if(max<bins[i])
+       		{
+       			max=bins[i];
+       		}
+       	
+       	}
+       	cout << "max è"<< max << endl;
 	c1->cd();
-	//hx->Scale(factor/hx->Integral(), "width");
-	hx->Draw();
+	hx->Scale(factor/883);
+	hx->Draw("HIST E");
 	c2->cd();
 	ht->Draw("HIST E");
+	c3->cd();
+	htheta->Scale(factor/822);
+	htheta->Draw("HIST E");
+	
+
+TFile* file = new TFile("utilities.root", "RECREATE");
+
+hx -> Write("Efficienza impatto",2,0);
+htheta -> Write("Efficienza angolo");
+ 
+
+
 	
 	
 }

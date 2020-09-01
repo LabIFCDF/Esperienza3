@@ -12,6 +12,13 @@
 
 void Beta()
 {
+
+cout << "loading eff histo" << endl;
+TFile* file = new TFile("utilities.root", "READ");
+TH1D* h_eff =  (TH1D*) file->Get("Efficienza impatto");
+TH1D* h_eff_theta =  (TH1D*) file->Get("Efficienza angolo");
+
+
 	int n=9070;
 	int n1=8915;
 	int j1=0;
@@ -23,6 +30,7 @@ void Beta()
 	double m_01=0;
 	double m_02=0;
 	//posizione sulla sbarra
+	Double_t factor = 1.;
 	double x[n1];
 	double gamma[n1];
 	double L[n1];
@@ -33,15 +41,18 @@ void Beta()
 	double Pmt1_corretto[n1];
 	double Pmt2_corretto[n1];
 	double angolo[n1];
+        double max=-1;
 	TH1D* h0_s =  new TH1D("h0_s", "Differenza temporale (T_pmt+T_rit)-T_pmt1",200 ,0,0);
 	TH1D* h0_d =  new TH1D("h0_d", "Differenza temporale (T_pmt+T_rit)-T_pmt2",200 ,0,0);
-	TH1D* xsbarra =  new TH1D("xsbarra", "Distribuzione punti di impatto",200 ,0,0);
-	TH1D* beta =  new TH1D("beta", "beta",100 ,0,1);
-	TH1D* theta =  new TH1D("theta", "angolo",50 ,0,0);
+	TH1D* xsbarra =  new TH1D("xsbarra", "Distribuzione punti di impatto pesata con l'efficienza ",29 ,0, 282);
+	xsbarra->Sumw2();
+	TH1D* beta =  new TH1D("beta", "Distribuzione dei beta dei muoni",100 ,0,1);
+	TH1D* theta =  new TH1D("theta", "Distribuzione angolare pesata con l'efficienza",27 ,0,0);
+	theta->Sumw2();
 	TCanvas* c1= new TCanvas("c1", "Differenze temporali tra pmt inferiore ritardato e pmt1/2 ai lati", 2000,500);
-	TCanvas* c2= new TCanvas("c2", "Distribuzione punti di impatto", 2000,500);
-	TCanvas* c3= new TCanvas("c3", "Beta", 2000,500);
-	TCanvas* c4= new TCanvas("c4", "Angolo", 2000,500);
+	TCanvas* c2= new TCanvas("c2", "Distribuzione punti di impatto pesata con l'efficienza", 2000,500);
+	TCanvas* c3= new TCanvas("c3", "Distribuzione dei beta dei muoni", 2000,500);
+	TCanvas* c4= new TCanvas("c4", "Distribuzione angolare pesata con l'efficienza", 2000,500);
 	std::vector<double> Time_0(n), vPmt1_0(n), vPmt2_0(n);
 	std::ifstream f0_read("15LugDown3.dat");
 	for(int i = 0; i < n; i++)
@@ -84,10 +95,28 @@ void Beta()
 	{
 		x[i]=6*(Pmt2_corretto[i]-Pmt1_corretto[i]+4.96)+140;	
 	}
+	//loop over main histo
+	int ibin = -1;
+	double weight = -1000;
+	
 	for(int i=0; i<n1; i++)
 	{
-		xsbarra->Fill(x[i]);		
+		ibin = h_eff-> GetXaxis()->FindBin(x[i]);
+		//cout << x[i] << endl;
+		//cout << h_eff->GetBinContent(ibin) << endl;
+		//cout << "-----------------------" << endl;
+		weight = h_eff->GetBinContent(ibin);
+		if(weight > 0.) //cout << "position = " << x[i] << " || weight = " << weight << endl;
+		{
+			xsbarra->Fill(x[i], 1./weight);
+		}
+			
+			
 	}
+	
+	Float_t *bins = new Float_t[xsbarra->GetSize()];
+	
+       // cout << "max è"<< max << endl;
 	for(int i=0; i<n1; i++)
 	{
 		//L[i]=sqrt(pow((x[i]-140),2)+pow(180,2));
@@ -105,7 +134,12 @@ void Beta()
 	for(int i=0; i<n1; i++)
 	{
 		angolo[i]=TMath::ATan((x[i]-140)/180);
-		theta->Fill(angolo[i]);
+		ibin = h_eff_theta-> GetXaxis()->FindBin(angolo[i]);
+		weight = h_eff_theta->GetBinContent(ibin);
+		if(weight > 0.) //cout << "position = " << x[i] << " || weight = " << weight << endl;
+		{
+			theta->Fill(angolo[i], 1./weight);
+		}
 	}
 	c1->Divide(1,2);
 	c1->cd(1);
@@ -114,7 +148,7 @@ void Beta()
   	h0_d->Draw();
   	c2->Divide(1,1);
 	c2->cd(1);
-	xsbarra->Draw();
+	xsbarra->Draw("HIST E");
 	c3->Divide(1,1);
 	c3->cd(1);
 	beta->Draw("HIST E");
@@ -124,6 +158,10 @@ void Beta()
 	
 	
 	
+TCanvas* cFile01= new TCanvas("cFile01", "cFile01", 2000,500);
+h_eff->Draw("HIST E");
+TCanvas* cFile02= new TCanvas("cFile02", "cFile02", 2000,500);
+h_eff_theta->Draw("HIST E");
 
 
 }
